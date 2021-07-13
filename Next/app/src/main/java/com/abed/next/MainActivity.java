@@ -1,9 +1,5 @@
 package com.abed.next;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
@@ -12,7 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -90,13 +88,14 @@ public class MainActivity extends AppCompatActivity {
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 1000000000));
                         googleMap.addMarker(options);
 
+
                         btnNEXT.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 
                                 double speed = Double.parseDouble(editTextSpd.getText().toString());
                                 double time = Double.parseDouble(editTextTime.getText().toString());
-                                
+
                                 double distance = speed * time;//distance calculation
 
 
@@ -116,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2, 1000000000));
                                 googleMap.addMarker(options2);
+
 
                             }
                         });

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Next</string>
+    <string name="navigation">Navigator</string>
+    <string name="enter_no_of_ship">Enter No of Ship</string>
+    <string name="enter_speed">Enter Speed</string>
+    <string name="enter_time">Enter Time</string>
 </resources>
