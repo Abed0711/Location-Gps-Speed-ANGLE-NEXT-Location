@@ -2,7 +2,9 @@ package com.abed.next;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -18,8 +20,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
@@ -29,16 +33,15 @@ public class MainActivity extends AppCompatActivity {
     FusedLocationProviderClient client;
     EditText editTextSpd;
     EditText editTextTime;
-    Button btnNEXT;
+    Button btnUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        editTextSpd = findViewById(R.id.s);
-        editTextTime = findViewById(R.id.t);
-        btnNEXT = findViewById(R.id.btnSubmit);
+
+        btnUpdate = findViewById(R.id.btnUpdate);
 
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.googleMap);
@@ -88,37 +91,65 @@ public class MainActivity extends AppCompatActivity {
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 1000000000));
                         googleMap.addMarker(options);
 
-
-                        btnNEXT.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                double speed = Double.parseDouble(editTextSpd.getText().toString());
-                                double time = Double.parseDouble(editTextTime.getText().toString());
-
-                                double distance = speed * time;//distance calculation
+                        Intent intentGetLon = getIntent();
+                        String[] stringLon = intentGetLon.getStringArrayExtra("stringLon");
+                        String[] stringLat = intentGetLon.getStringArrayExtra("stringLat");
 
 
-                                final double r = 6371 * 1000; // Earth Radius in m
+                        for (int i = 0; i < stringLat.length; i++) {
+                            double lat = Double.parseDouble(stringLat[i]);
+                            double lon = Double.parseDouble(stringLon[i]);
+                            LatLng latLng2 = new LatLng(lat, lon);
+                            MarkerOptions options2 = new MarkerOptions().position(latLng2);
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2, 1000000000));
+                            googleMap.addMarker(options2.icon(BitmapDescriptorFactory.defaultMarker(150)));
+                            googleMap.addPolyline(new PolylineOptions()
+                                    .add(latLng, latLng2)
+                                    .width(5)
+                                    .color(Color.RED));
 
-                                double lat2 = Math.asin(Math.sin(Math.toRadians(lat1)) * Math.cos(distance / r)
-                                        + Math.cos(Math.toRadians(lat1)) * Math.sin(distance / r) * Math.cos(Math.toRadians(bearing)));
-                                double lon2 = Math.toRadians(lon1)
-                                        + Math.atan2(Math.sin(Math.toRadians(bearing)) * Math.sin(distance / r) * Math.cos(Math.toRadians(lat1)), Math.cos(distance / r)
-                                        - Math.sin(Math.toRadians(lat1)) * Math.sin(lat2));
-                                lat2 = Math.toDegrees(lat2);
-                                lon2 = Math.toDegrees(lon2);
-
-                                LatLng latLng2 = new LatLng(lat2, lon2);
-
-                                MarkerOptions options2 = new MarkerOptions().position(latLng2).title("Here, I'l be there..");
-
-                                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2, 1000000000));
-                                googleMap.addMarker(options2);
+                            btnUpdate.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intentInputLonLat = new Intent(getApplicationContext(), HomePage.class);
+                                    startActivity(intentInputLonLat);
+                                }
+                            });
+                        }
 
 
-                            }
-                        });
+
+
+//                        btnNEXT.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//
+//                                double speed = Double.parseDouble(editTextSpd.getText().toString());
+//                                double time = Double.parseDouble(editTextTime.getText().toString());
+//
+//                                double distance = speed * time;//distance calculation
+//
+//
+//                                final double r = 6371 * 1000; // Earth Radius in m
+//
+//                                double lat2 = Math.asin(Math.sin(Math.toRadians(lat1)) * Math.cos(distance / r)
+//                                        + Math.cos(Math.toRadians(lat1)) * Math.sin(distance / r) * Math.cos(Math.toRadians(bearing)));
+//                                double lon2 = Math.toRadians(lon1)
+//                                        + Math.atan2(Math.sin(Math.toRadians(bearing)) * Math.sin(distance / r) * Math.cos(Math.toRadians(lat1)), Math.cos(distance / r)
+//                                        - Math.sin(Math.toRadians(lat1)) * Math.sin(lat2));
+//                                lat2 = Math.toDegrees(lat2);
+//                                lon2 = Math.toDegrees(lon2);
+//
+//                                LatLng latLng2 = new LatLng(lat2, lon2);
+//
+//                                MarkerOptions options2 = new MarkerOptions().position(latLng2).title("Here, I'l be there..");
+//
+//                                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2, 1000000000));
+//                                googleMap.addMarker(options2);
+//
+//
+//                            }
+//                        });
 
 
                     }

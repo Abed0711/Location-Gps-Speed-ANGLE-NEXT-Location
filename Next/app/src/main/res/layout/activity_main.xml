@@ -19,51 +19,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <EditText
-        android:id="@+id/s"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginRight="22dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/et_style"
-        android:hint="@string/enter_speed"
-        android:inputType="number"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/t"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/googleMap"
-        app:layout_constraintVertical_bias="0.998" />
-
-    <EditText
-        android:id="@+id/t"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginRight="22dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/et_style"
-        android:hint="@string/enter_time"
-        android:inputType="numberDecimal"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnSubmit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <Button
-        android:id="@+id/btnSubmit"
+        android:id="@+id/btnUpdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="60dp"
         android:background="#80c5de"
-        android:text="Next"
+        android:text="Update"
         android:textStyle="normal|bold|italic"
         app:backgroundTint="#80c5de"
         app:layout_constraintBottom_toBottomOf="parent"
