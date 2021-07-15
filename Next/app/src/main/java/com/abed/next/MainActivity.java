@@ -4,12 +4,14 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -27,6 +29,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.sql.SQLException;
+
 public class MainActivity extends AppCompatActivity {
 
     SupportMapFragment supportMapFragment;
@@ -39,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        //Toast.makeText(getApplicationContext(),cursor.getString(2),Toast.LENGTH_LONG).show();
+        //length= Integer.parseInt(cursor.getString(0));
+        //dbManagerLatLon.close();
 
 
         btnUpdate = findViewById(R.id.btnUpdate);
@@ -88,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
                         MarkerOptions options = new MarkerOptions().position(latLng).title("Here, I'm..");
 
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 1000000000));
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10000));
                         googleMap.addMarker(options);
 
                         Intent intentGetLon = getIntent();
@@ -96,28 +105,31 @@ public class MainActivity extends AppCompatActivity {
                         String[] stringLat = intentGetLon.getStringArrayExtra("stringLat");
 
 
-                        for (int i = 0; i < stringLat.length; i++) {
-                            double lat = Double.parseDouble(stringLat[i]);
-                            double lon = Double.parseDouble(stringLon[i]);
+                        DBManagerLatLon dbManagerLatLon = new DBManagerLatLon(getApplicationContext());
+                        dbManagerLatLon.open();
+                        Cursor cursor = dbManagerLatLon.fetchData();
+                        while (cursor.moveToNext()) {
+                            double lat = Double.parseDouble(cursor.getString(2));
+                            double lon = Double.parseDouble(cursor.getString(3));
+                            Toast.makeText(getApplicationContext(), lat + " " + lon, Toast.LENGTH_LONG).show();
                             LatLng latLng2 = new LatLng(lat, lon);
                             MarkerOptions options2 = new MarkerOptions().position(latLng2);
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2, 1000000000));
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2, 10000));
                             googleMap.addMarker(options2.icon(BitmapDescriptorFactory.defaultMarker(150)));
                             googleMap.addPolyline(new PolylineOptions()
                                     .add(latLng, latLng2)
                                     .width(5)
                                     .color(Color.RED));
-
-                            btnUpdate.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intentInputLonLat = new Intent(getApplicationContext(), HomePage.class);
-                                    startActivity(intentInputLonLat);
-                                }
-                            });
                         }
+                        btnUpdate.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intentInputLonLat = new Intent(getApplicationContext(), HomePage.class);
+                                startActivity(intentInputLonLat);
+                            }
+                        });
 
-
+                        dbManagerLatLon.close();
 
 
 //                        btnNEXT.setOnClickListener(new View.OnClickListener() {
