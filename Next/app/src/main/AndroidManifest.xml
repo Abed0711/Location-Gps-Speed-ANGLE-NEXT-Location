@@ -16,21 +16,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Next">
-        <activity android:name=".UpdateTable"></activity>
-        <activity android:name=".InputLonLat" />
+        <activity android:name=".Activity.UpdateTable"></activity>
+        <activity android:name=".Activity.InputLonLat" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB_haNtyZki9qguDGI-dX2Uo8KOTxEHM3w" />
 
-        <activity android:name=".HomePage">
+        <activity android:name=".Activity.HomePage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".Activity.MainActivity" />
 
     </application>
 
