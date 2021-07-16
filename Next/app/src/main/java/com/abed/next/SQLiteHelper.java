@@ -1,6 +1,7 @@
 package com.abed.next;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -19,8 +20,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String Lon = "Lon";
 
     public SQLiteHelper(Context context) {
-        super(context, DB_NAME, null, 3);
+        super(context, DB_NAME, null, 4);
     }
+
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_SHIP);
@@ -32,4 +34,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS SHIP_INFO");
         onCreate(db);
     }
+
+
 }

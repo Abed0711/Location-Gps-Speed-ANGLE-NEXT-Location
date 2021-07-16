@@ -3,6 +3,7 @@ package com.abed.next;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -54,4 +55,8 @@ public class DBManagerLatLon {
     public void deleteInfo(long id) {
         this.database.delete(SQLiteHelper.TABLE_NAME_SHIP_INFO, "id=" + id, null);
     }
+
+//    public long getProfilesCount() {
+//        this.database.
+//    }
 }

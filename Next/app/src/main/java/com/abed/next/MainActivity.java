@@ -1,5 +1,6 @@
 package com.abed.next;
 
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -38,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
     EditText editTextSpd;
     EditText editTextTime;
     Button btnUpdate;
+
+    @Override
+    public void onBackPressed() {
+       // this.deleteDatabase("SHIP.DB");
+        this.finishAffinity();
+        super.onBackPressed();
+
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,12 +107,12 @@ public class MainActivity extends AppCompatActivity {
 
                         MarkerOptions options = new MarkerOptions().position(latLng).title("Here, I'm..");
 
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10000));
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
                         googleMap.addMarker(options);
 
-                        Intent intentGetLon = getIntent();
-                        String[] stringLon = intentGetLon.getStringArrayExtra("stringLon");
-                        String[] stringLat = intentGetLon.getStringArrayExtra("stringLat");
+//                        Intent intentGetLon = getIntent();
+//                        String[] stringLon = intentGetLon.getStringArrayExtra("stringLon");
+//                        String[] stringLat = intentGetLon.getStringArrayExtra("stringLat");
 
 
                         DBManagerLatLon dbManagerLatLon = new DBManagerLatLon(getApplicationContext());
@@ -111,10 +121,10 @@ public class MainActivity extends AppCompatActivity {
                         while (cursor.moveToNext()) {
                             double lat = Double.parseDouble(cursor.getString(2));
                             double lon = Double.parseDouble(cursor.getString(3));
-                            Toast.makeText(getApplicationContext(), lat + " " + lon, Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(), lat + " " + lon, Toast.LENGTH_LONG).show();
                             LatLng latLng2 = new LatLng(lat, lon);
                             MarkerOptions options2 = new MarkerOptions().position(latLng2);
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2, 10000));
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2, 10));
                             googleMap.addMarker(options2.icon(BitmapDescriptorFactory.defaultMarker(150)));
                             googleMap.addPolyline(new PolylineOptions()
                                     .add(latLng, latLng2)
@@ -124,8 +134,8 @@ public class MainActivity extends AppCompatActivity {
                         btnUpdate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intentInputLonLat = new Intent(getApplicationContext(), HomePage.class);
-                                startActivity(intentInputLonLat);
+                                Intent intent = new Intent(MainActivity.this, UpdateTable.class);
+                                startActivity(intent);
                             }
                         });
 

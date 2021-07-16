@@ -17,21 +17,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InputLonLat extends AppCompatActivity {
+public class UpdateTable extends AppCompatActivity {
+
     private LinearLayout lnrDynamicEditTextHolder;
-    private Button btnAdd;
+    private Button btnUpdate;
     public int length;
-
-
-    @Override
-    public void onBackPressed() {
-        //this.deleteDatabase("SHIP.DB");
-        this.finishAffinity();
-        super.onBackPressed();
-
-
-
-    }
 
     EditText ed, ed_time, ed_Name;
 
@@ -39,20 +29,20 @@ public class InputLonLat extends AppCompatActivity {
     List<EditText> allEdsLat = new ArrayList<EditText>();
     List<EditText> allEdName = new ArrayList<EditText>();
 
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_input_lon_lat);
+        setContentView(R.layout.activity_update_table);
 
         lnrDynamicEditTextHolder = (LinearLayout) findViewById(R.id.lnrDynamicEditTextHolder);
-        btnAdd = findViewById(R.id.button);
+        btnUpdate = findViewById(R.id.buttonUpdate);
 
         DBManager dbManager = new DBManager(getApplicationContext());
         dbManager.open();
 
         DBManagerLatLon dbManagerLatLon = new DBManagerLatLon(getApplicationContext());
         dbManagerLatLon.open();
-        //dbManagerLatLon.deleteInfo();
 
         Cursor cursor = dbManager.fetch();
         cursor.moveToFirst();
@@ -66,7 +56,7 @@ public class InputLonLat extends AppCompatActivity {
             rowTextView.setText("Ship #" + (j + 1));
             lnrDynamicEditTextHolder.addView(rowTextView);
 
-            ed_Name = new EditText(InputLonLat.this);
+            ed_Name = new EditText(getApplicationContext());
             ed_Name.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
             ed_Name.setHint("Enter Name Of Ship");
             allEdName.add(ed_Name);
@@ -74,7 +64,7 @@ public class InputLonLat extends AppCompatActivity {
             ed_Name.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             lnrDynamicEditTextHolder.addView(ed_Name);
 
-            ed_time = new EditText(InputLonLat.this);
+            ed_time = new EditText(getApplicationContext());
             ed_time.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
             ed_time.setHint("Enter Lat");
             allEdsLat.add(ed_time);
@@ -83,7 +73,7 @@ public class InputLonLat extends AppCompatActivity {
             ed_time.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             lnrDynamicEditTextHolder.addView(ed_time);
             //EditText for Speed
-            ed = new EditText(InputLonLat.this);
+            ed = new EditText(getApplicationContext());
             ed.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
             ed.setHint("Enter Lon");
             allEdsLon.add(ed);
@@ -94,13 +84,12 @@ public class InputLonLat extends AppCompatActivity {
         }
 
 
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String[] stringsLon = new String[(allEdsLon.size())];
                 String[] stringsLat = new String[(allEdsLat.size())];
                 ArrayList<String> myList = new ArrayList<String>();
-                dbManagerLatLon.insertSInfo("Abed", "0", "0");
 
                 for (int i = 0; i < allEdsLat.size(); i++) {
                     stringsLon[i] = String.valueOf(allEdsLon.get(i).getText());
@@ -110,28 +99,28 @@ public class InputLonLat extends AppCompatActivity {
                     dbManagerLatLon.insertSInfo("Abed", stringsLat[i], stringsLon[i]);
                     // dbManagerLatLon.updateInfo(i,"Abed",stringsLat[i],stringsLon[i]);
                     // dbManagerLatLon.insertSInfo("Abed",stringsLat[i],stringsLon[i]);
-                    //Toast.makeText(getApplicationContext(), "Added successfully!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Added successfully!", Toast.LENGTH_SHORT).show();
                 }
 
                 dbManagerLatLon.close();
 
 
-//                Intent intent_Lon = new Intent(getApplicationContext(), MainActivity.class);
-//                intent_Lon.putExtra("stringLon", stringsLon);
-//                intent_Lon.putExtra("stringLat", stringsLat);
-                lnrDynamicEditTextHolder.removeAllViews();
+                Intent intent_Lon = new Intent(getApplicationContext(), MainActivity.class);
+                intent_Lon.putExtra("stringLon", stringsLon);
+                intent_Lon.putExtra("stringLat", stringsLat);
 
-                Intent intent_main = new Intent(InputLonLat.this, MainActivity.class);
+                Intent intent_main = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent_main);
-//
-//                startActivity(intent_Lon);
 
+                startActivity(intent_Lon);
+                lnrDynamicEditTextHolder.removeAllViews();
 
                 //startActivity(intentLat);
 
 
             }
         });
-    }
 
+
+    }
 }
