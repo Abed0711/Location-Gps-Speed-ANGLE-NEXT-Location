@@ -57,7 +57,4 @@ public class DBManagerLatLon {
         this.database.delete(SQLiteHelper.TABLE_NAME_SHIP_INFO, "id=" + id, null);
     }
 
-//    public long getProfilesCount() {
-//        this.database.
-//    }
 }

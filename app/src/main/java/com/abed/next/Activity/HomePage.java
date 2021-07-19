@@ -26,39 +26,36 @@ public class HomePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
         this.deleteDatabase("SHIP.DB");
-
-        DBManager dbManager = new DBManager(getApplicationContext());
-        dbManager.open();
-
-        DBManagerLatLon dbManagerLatLon = new DBManagerLatLon(getApplicationContext());
-        dbManagerLatLon.open();
 
         btnNxt = findViewById(R.id.nextBtn);
         howManyShip1 = (EditText) findViewById(R.id.howManyShip);
 
-        SQLiteHelper DB = new SQLiteHelper(this);
-
-
         btnNxt.setOnClickListener(new OnClickListener() {
+
             @Override
             public void onClick(View v) {
+                DBManager dbManager = new DBManager(HomePage.this);
+                dbManager.open();
+
+                DBManagerLatLon dbManagerLatLon = new DBManagerLatLon(HomePage.this);
+                dbManagerLatLon.open();
                 howManyShipPassValueNext = howManyShip1.getText().toString();
 
-               // Boolean checkdlt = DB.deleteData(0);
+                if (howManyShipPassValueNext.isEmpty()) {
+                    Toast.makeText(HomePage.this, "Enter How Many Ship!", Toast.LENGTH_SHORT).show();
+                } else {
+                    dbManager.insert(howManyShipPassValueNext);
+                    dbManager.update(howManyShipPassValueNext);
+                    Toast.makeText(HomePage.this, "Please wait ..", Toast.LENGTH_SHORT).show();
+                    dbManager.close();
 
-                dbManager.insert(howManyShipPassValueNext);
-                dbManager.update(howManyShipPassValueNext);
-                Toast.makeText(getApplicationContext(), "Updated successfully!", Toast.LENGTH_SHORT).show();
-                dbManager.close();
-
-
-                Intent intent = new Intent(HomePage.this, InputLonLat.class);
-                startActivity(intent);
+                    Intent intent = new Intent(HomePage.this, InputLonLat.class);
+                    startActivity(intent);
+                }
             }
         });
     }
-
-
 }
 

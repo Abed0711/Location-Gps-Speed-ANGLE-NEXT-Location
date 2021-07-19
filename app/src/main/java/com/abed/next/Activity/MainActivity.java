@@ -3,6 +3,7 @@ package com.abed.next.Activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -37,29 +39,30 @@ public class MainActivity extends AppCompatActivity {
 
     SupportMapFragment supportMapFragment;
     FusedLocationProviderClient client;
-    EditText editTextSpd;
-    EditText editTextTime;
     Button btnUpdate;
 
     @Override
     public void onBackPressed() {
-        // this.deleteDatabase("SHIP.DB");
-        this.finishAffinity();
-        super.onBackPressed();
-
-
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Closing Activity")
+                .setMessage("Are you sure you want to close this activity?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        finishAffinity();
+                        MainActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-        //Toast.makeText(getApplicationContext(),cursor.getString(2),Toast.LENGTH_LONG).show();
-        //length= Integer.parseInt(cursor.getString(0));
-        //dbManagerLatLon.close();
-
 
         btnUpdate = findViewById(R.id.btnUpdate);
 
@@ -82,10 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
 
-
-            double lat1;//start latitude point
-            double lon1;//start longitude point
-
             double bearing;//distance calculation
             LatLng[] latLng2 = new LatLng[10];
 
@@ -95,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
                     @SuppressLint("MissingPermission")
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
-
 
                         googleMap.setMyLocationEnabled(true);
 
@@ -110,11 +108,6 @@ public class MainActivity extends AppCompatActivity {
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
                         googleMap.addMarker(options);
 
-//                        Intent intentGetLon = getIntent();
-//                        String[] stringLon = intentGetLon.getStringArrayExtra("stringLon");
-//                        String[] stringLat = intentGetLon.getStringArrayExtra("stringLat");
-
-
                         DBManagerLatLon dbManagerLatLon = new DBManagerLatLon(getApplicationContext());
                         dbManagerLatLon.open();
                         Cursor cursor = dbManagerLatLon.fetchData();
@@ -123,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
 
                         DBManagerUpdate dbManagerUpdate = new DBManagerUpdate(getApplicationContext());
                         dbManagerUpdate.open();
-                        //dbManagerUpdate.insertSInfo("frmupdate", "0", "0");
                         Cursor cursorUpdate = dbManagerUpdate.fetchData();
                         cursorUpdate.moveToFirst();
 
@@ -134,12 +126,10 @@ public class MainActivity extends AppCompatActivity {
                             Sname[count] = cursor.getString(1);
                             double lat = Double.parseDouble(cursor.getString(2));
                             double lon = Double.parseDouble(cursor.getString(3));
-                            //Toast.makeText(getApplicationContext(), Sname, Toast.LENGTH_LONG).show();
-
 
                             latLng2[count] = new LatLng(lat, lon);
 
-                            MarkerOptions options2 = new MarkerOptions().position(latLng2[count]);
+                            MarkerOptions options2 = new MarkerOptions().position(latLng2[count]).title(Sname[count]);
                             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2[count], 10));
                             googleMap.addMarker(options2.icon(BitmapDescriptorFactory.defaultMarker(150)));
                             googleMap.addPolyline(new PolylineOptions()
@@ -166,15 +156,10 @@ public class MainActivity extends AppCompatActivity {
                                             .add(latLng2[i], latLng3)
                                             .width(5)
                                             .color(Color.GREEN));
-                                    Toast.makeText(getApplicationContext(), Sname[i] + " " + SnameU, Toast.LENGTH_LONG).show();
-
-
+                                    latLng2[i] = latLng3;
                                 }
                             }
-
-
                         }
-
                         btnUpdate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -182,18 +167,13 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
                         });
-
                         dbManagerLatLon.close();
                         dbManagerUpdate.close();
-
-
                     }
                 });
 
             }
         });
-
-
     }
 
     @Override

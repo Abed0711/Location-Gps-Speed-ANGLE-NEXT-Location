@@ -57,7 +57,4 @@ public class DBManagerUpdate {
         this.database.delete(SQLiteHelper.TABLE_NAME_SHIP_UPDATE, "id=" + id, null);
     }
 
-//    public long getProfilesCount() {
-//        this.database.
-//    }
 }
